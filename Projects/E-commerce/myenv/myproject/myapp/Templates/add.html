@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+{%extends  'sheader.html' %}
+{% load static %}
+{% block content %}
+
+<html lang="en">
+  
+
+    <div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Signup</span></p>
+            <h1 class="mb-0 bread">Add-Product</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section contact-section bg-light">
+      <div class="container">
+      	<div class="row d-flex mb-5 contact-info">
+          <div class="w-100"></div>
+          <div class="col-md-3 d-flex">
+          	<div class="info bg-white p-4">
+	            <p><span>Address:</span> 198 West 21th Street, Suite 721 New York NY 10016</p>
+	          </div>
+          </div>
+          <div class="col-md-3 d-flex">
+          	<div class="info bg-white p-4">
+	            <p><span>Phone:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
+	          </div>
+          </div>
+          <div class="col-md-3 d-flex">
+          	<div class="info bg-white p-4">
+	            <p><span>Email:</span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
+	          </div>
+          </div>
+          <div class="col-md-3 d-flex">
+          	<div class="info bg-white p-4">
+	            <p><span>Website</span> <a href="#">yoursite.com</a></p>
+	          </div>
+          </div>
+        </div>
+        
+        {% if msg %}
+        <div class="alert alert-danger" role="alert">
+            {{msg}}
+        </div>
+        {% endif %}
+
+        <div class="row block-9">
+          <div class="col-md-6 order-md-last d-flex">
+            <form class="bg-white p-5 contact-form" method= "POST" action="{% url 'add' %}"  enctype="multipart/form-data">          
+              {% csrf_token %}
+              <div class="form-group">
+                <select name="Scategory" >
+                <option>----------Select Category---------</option>
+                <option value = "Men"> Men </option>
+                <option value= "Women"> Women </option>  
+                <option value = "Kids"> Kids </option>
+                <option value= "Accessories"> Accessories </option>
+                <option value = "Jewellery"> Jewellery </option>  
+                </select>
+            </div>
+
+            <div class="form-group">
+              <select name="Sbrand" >
+              <option>----------Select Brand---------</option>
+              <option value = "Raymond"> Raymond </option>
+              <option value= "Polp"> Polp </option>  
+              <option value = "Puma"> Puma </option>
+              <option value= "Peter England"> Peter England </option>
+              <option value = "Nike"> Nike </option>
+              <option value = "Other"> Other </option>    
+              </select>
+          </div>
+
+          <div class="form-group">
+            <select name="Ssize" >
+            <option>----------Select Size---------</option>
+            <option value = "S"> S </option>
+            <option value= "M"> M </option>  
+            <option value = "L"> L </option>
+            <option value= "XL"> XL </option>
+            <option value = "XXL"> XXL </option>  
+            <option value = "XXXL"> XXXL </option>
+            <option value = "Free size"> Free size </option>
+            <option value = "0-3 Month"> 0-3 Month </option>
+            <option value = "3-6 Month"> 3-6 Month </option>
+            <option value = "1-2 year"> 1-2 year </option>
+            <option value = "3-5 year"> 3-5 year </option>
+            <option value = "5-7 year"> 5-7 year </option>
+            </select>
+        </div>
+
+            
+
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Product Name" name= "Pname">
+              </div>
+
+              <div class="form-group">
+                <input type="Number" class="form-control" placeholder="Price" name= "Price">
+             </div>
+              
+              <textarea name="Description" class="form-group" rows="4" cols="50" placeholder="Enter Description Here.."></textarea>
+              
+              <div class="form-group">
+                <input type="file" class="form-control", name= "Image">
+              </div>
+              
+              <div class="form-group">
+                <input type="submit" value="Add Product" class="btn btn-primary py-3 px-5">
+              </div>
+            </form>
+          
+          </div>
+
+          <div class="col-md-6 d-flex">
+          	<div id="map" class="bg-white"></div>
+          </div>
+        </div>
+      </div>
+    </section> 
+    {% endblock %}
+</html>

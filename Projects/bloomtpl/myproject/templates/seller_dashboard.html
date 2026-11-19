@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<html lang="en">
+
+<section class="ftco-section bg-light">
+    <div class="container">
+
+        <!-- Dashboard Heading -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 text-center">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Manage your account, orders and shopping activities.</p>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="row">
+
+            <!-- My Orders -->
+            <div class="col-md-4 mb-4">
+                <div class="bg-white p-4 text-center h-100">
+                    <h4>My Orders</h4>
+                    <p>View your current and previous orders.</p>
+                    <a href="#" class="btn btn-primary">
+                        View Orders
+                    </a>
+                </div>
+            </div>
+
+            <!-- My Cart -->
+            <div class="col-md-4 mb-4">
+                <div class="bg-white p-4 text-center h-100">
+                    <h4>My Cart</h4>
+                    <p>View the products added to your cart.</p>
+                    <a href="#" class="btn btn-primary">
+                        View Cart
+                    </a>
+                </div>
+            </div>
+
+            <!-- Wishlist -->
+            <div class="col-md-4 mb-4">
+                <div class="bg-white p-4 text-center h-100">
+                    <h4>My Wishlist</h4>
+                    <p>View and manage your saved products.</p>
+                    <a href="#" class="btn btn-primary">
+                        Wishlist
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile -->
+            <div class="col-md-4 mb-4">
+                <div class="bg-white p-4 text-center h-100">
+                    <h4>My Profile</h4>
+                    <p>View and update your personal information.</p>
+                    <a href="#" class="btn btn-primary">
+                        Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Addresses -->
+            <div class="col-md-4 mb-4">
+                <div class="bg-white p-4 text-center h-100">
+                    <h4>My Addresses</h4>
+                    <p>Manage your delivery addresses.</p>
+                    <a href="#" class="btn btn-primary">
+                        Addresses
+                    </a>
+                </div>
+            </div>
+
+            <!-- Continue Shopping -->
+            <div class="col-md-4 mb-4">
+                <div class="bg-white p-4 text-center h-100">
+                    <h4>Continue Shopping</h4>
+                    <p>Explore products and discover something new.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Logout -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-3 text-center">
+                <a href="#" class="btn btn-danger py-2 px-4">
+                    Logout
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
+```
+
+    
+    {% endblock %}
+
+</html>

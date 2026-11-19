@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<html lang="en">
+
+    <section class="ftco-section contact-section bg-light">
+        <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center position-relative" style="top: -80px;">
+        <div class="col-md-9 text-center">
+            <p class="breadcrumbs mb-0">
+                <span class="mr-2">
+                    <a href="{% url 'home' %}">Home</a>
+                </span>
+                <span>Change-Password</span>
+            </p>
+        </div>
+
+    </div>
+</div>
+      <div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg'%}');">
+        <div class="container">
+        <div class="row block-9 justify-content-center">
+          <div class="col-md-8 order-md-last d-flex">
+            <form action="{% url 'change_password' %}" method="post" class="bg-white p-5 contact-form" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="row no-gutters slider-text align-items-center justify-content-center">
+                     <div class="col-md-12 ftco-animate text-center">
+                       <h3 class="mb-0 bread">Change Password</h3><br>
+                     </div>
+                </div>
+
+              <div class="form-group">
+                Old Password:<input type="password" class="form-control" name="old_password" required>
+              </div>
+
+              <div class="form-group">
+                New Password:*<input type="password" class="form-control" name="new_password" required>
+              </div>
+              
+              <div class="form-group">
+                Confirm New Password:*<input type="password" class="form-control" name="confirm_new_password" required>
+              </div>
+              <div class="form-group">
+                <input type="submit" value="update password" class="btn btn-primary py-3 px-5">
+              </div>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+              
+             
+            </form>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </section> 
+   
+    {% endblock %}
+</html>
+
+

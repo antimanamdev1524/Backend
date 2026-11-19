@@ -1,0 +1,25 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<html lang="en">
+
+    <section class="ftco-section">
+    <div class="container">
+        <div class="text-center">
+
+            <h2>Signup Successful! 🎉</h2>
+
+            <p>
+                Your account has been created successfully.
+            </p>
+
+            <a href="{% url 'login' %}" class="btn btn-primary">
+                Login Now
+            </a>
+
+        </div>
+    </div>
+</section>
+    {% endblock %}
+</html>
