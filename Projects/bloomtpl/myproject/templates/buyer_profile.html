@@ -7,111 +7,443 @@
 <html lang="en">
 <section>
     <div class="container">
-       <div class = "row">
-        <div class="col-md-3 sidebar">
-           
-        
-              <div class="sidebar-box-2">
-                 <div class= "card header">
-                     <div class= "profile-picture-container" style="text-align: left; padding: 10px;">
-                            {% if profile.profile_picture %}
-                                   <img src="{{ profile.profile_picture.url }}" id="view_profile" alt="Profile Picture" class="rounded-circle" width="50" height="50">
+            <div class = "row">
+                <div class="col-md-3 sidebar">
+                    <div class="sidebar-box-2">
+                        <div class= "card header">
+                            <div class= "profile-picture-container" style="text-align: left; padding: 10px;">
+                                    {% if profile.profile_picture %}
+                                        <img src="{{ profile.profile_picture.url }}" id="sidebar-profile-picture" alt="Profile Picture" class="rounded-circle" width="50" height="50">
+                                    {% else %}
+                                        <img src="{% static 'images/default_profile_picture.jpg' %}" id="sidebar-profile-Picture" alt="Default Profile Picture" class="rounded-circle" width="50" height="50">
+                                    {% endif %}
+                                <b>   {{user.first_name}} {{user.last_name}} </b> 
+                            </div>
+                        </div>                            
+                    </div>
+                        
+
+                    
+                    <div class="sidebar-box-2">
+                        <div class= "card header" style="text-align:left; color: black; padding: 10px; margin-top: -30px;">
+                            <span><i class="bi bi-person-circle"></i>&nbsp;&nbsp; MY ACCOUNT</span>
+                        </div>
+                        <div class= "card header" style="text-align: left; padding: 10px;">
+                            <span>
+                                    <a href="#" class="sidebar-tab-link" data-target="sec-update-profile"><i class="bi bi-pencil-square"></i> &nbsp;&nbsp; Update Profile</a>
+                            </span>
+                            <span>
+                                    <a href="#" class="sidebar-tab-link" data-target="sec-change-password"><i class="bi bi-shield-fill-exclamation"></i> &nbsp;&nbsp; Change Password</a>
+                            </span>
+                        </div>
+
+                        <div class= "card header" style="text-align: left; color: black; padding: 10px;">
+                            <span> <i class="bi bi-person-vcard"> </i>&nbsp;&nbsp; MY ORDERS </span>
+                        </div>
+                        <div class= "card header" style="text-align: left; padding: 10px;"> 
+                            <span>
+                                    <a href="#"><i class="bi bi-box-fill"></i> &nbsp;&nbsp; My Products</a>
+                            </span>
+                            <span>
+                                    <a href="#"><i class="bi bi-suit-heart"></i> &nbsp;&nbsp; Wishlist</a>
+                            </span>
+                            <span>
+                                    <a href="{% url 'cart' %}"><i class="bi bi-cart3"></i> &nbsp;&nbsp; Cart</a>
+                            </span>
+                            <span>
+                                    <a href="{% url 'checkout' %}"><i class="bi bi-bookmark-check-fill"></i> &nbsp;&nbsp; Checkout</a>
+                            </span>
+                        </div>
+
+                        <div class= "card header" style="text-align: left; color: black; padding: 10px;">
+                            <span> <i class="bi bi-person-vcard"> </i>&nbsp;&nbsp; Payments </span>
+                        </div>
+                        <div class= "card header" style="text-align: left; padding: 10px;"> 
+                            <span>
+                                    <a href="#"class="sidebar-tab-link" data-target="sec-bank-details"><i class="bi bi-bank"></i> &nbsp;&nbsp; Bank Details</a>
+                            </span>
+                            <span>
+                                    <a href="{% url 'checkout' %}"><i class="bi bi-credit-card-2-front"></i> &nbsp;&nbsp; Other Payments</a>
+                            </span>
+                        </div>
+                        <div class= "card header" style="text-align:left; color: black; padding: 10px; ">
+                            <span><i class="bi bi-box-arrow-right"></i>  &nbsp;&nbsp; Logout</span>
+                        </div>                             
+                    </div>
+
+                    <div class="sidebar-box-2">
+                        <div class= "card header" style="text-align:left; color: black; padding: 10px; margin-top: -30px;">
+                            <small> Frequently Visited:
+                                <span> Privacy Policy &nbsp;&nbsp; Help Center </span>
+                            </small>
+                        </div>                         
+                    </div> 
+                </div>
+
+
+                <div class="col-md-8" id="buyer-main-content" style="margin-left: 20px; margin-top: 2px;">     
+                <!-- By default Personal Information -->
+                <div id="sec-personal" class="buyer-section">
+                    <div class= "row" style="text-align: left;">
+                        <h4> <b><i>  PERSONAL INFORMATION </i></b> </h4>
+                    </div>
+                    <div class= "row" style="text-align: left; padding: 10px;">
+                        <span> <b> Name: </b> {{user.first_name}} {{user.last_name}} </span>
+                    </div>
+                    <div class= "row" style="text-align: left; padding: 10px;">
+                        <span> <b> Mobile Number: </b> {{profile.mobile}}  </span>
+                    </div>
+                    <div class= "row" style="text-align: left; padding: 10px;">
+                        <span> <b> Email Id: </b> {{user.email}} </span>
+                    </div>
+                    <div class= "row" style="text-align: left; padding: 10px;">
+                        <span> 
+                            <b> Address: </b> 
+                            {% if address %}
+                                {{address.apartment}}, {{address.street}}, 
+                                {{address.city}}, {{address.district}}, 
+                                {{address.state}}, {{address.country}}, {{address.pincode}}
                             {% else %}
-                                   <img src="{% static 'images/default_profile_picture.jpg' %}" id="view_profile" alt="Default Profile Picture" class="rounded-circle" width="50" height="50">
+                                Address not added yet
                             {% endif %}
-                          <b>   {{user.first_name}} {{user.last_name}} </b> 
-                     </div>
-                 </div>                            
-              </div>
+                        </span>
+                    </div>
+                </div>
 
+                <!-- update profile -->
+                <div id="sec-update-profile" class="buyer-section d-none">
+                    <form action="{% url 'update_profile' %}" method="post" class="billing-form" enctype="multipart/form-data">
+                        {% csrf_token %}	
+                        {% comment %} 
+                            <div class= "profile-picture-container" style="text-align: center; margin-top: 20px; padding: 40px;">
+                                {% if profile.profile_picture %}
+                                    <img src="{{ profile.profile_picture.url }}" id="update_profile_preview" class="rounded-circle" width="50" height="50">
+                                {% else %}
+                                    <img src="{% static 'images/default_profile_picture.jpg' %}" id="update_profile_preview" alt="Default Profile Picture" class="rounded-circle" width="50" height="50">
+                                {% endif %}
+
+                                <div class="text d-block pl-md-5">
+                                    <div class="meta mb-3">        
+                                        <div class="meta-chat" style="position: relative !important; top: -15px !important; display: inline-block;">
+                                            <input type="file" id="profile-picture-input" onchange="handleProfilePictureChange(event)" name="profile_picture" style="display: none;">
+                                            <i class="bi bi-pencil-fill" onclick="editProfile()"></i> 
+                                                <script>
+                                                    function editProfile() 
+                                                        {
+                                                            // Edit profile logic here
+                                                                var i= document.getElementById('profile-picture-input');
+                                                                console.log(i);
+                                                                i.click();
+                                                        }
+
+                                                            function handleProfilePictureChange(event) 
+                                                            {
+                                                                var file = event.target.files[0];
+                                                                if (file) 
+                                                                {
+                                                                    var reader = new FileReader();
+                                                                    reader.onload = function(e) 
+                                                                    {
+                                                                        document.getElementById('view_profile').src = e.target.result;
+                                                                    };
+                                                                    reader.readAsDataURL(file);
+                                                                }
+                                                            }
+                                                </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        {% endcomment %}
+
+
+                                
+                                <h6 class="mb-4 billing-heading">Personal Information:</h6>		
+                                <div class="row align-items-end">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="firstname">First Name</label>
+                                                <input type="text" class="form-control" name="first_name" value="{{ request.session.first_name|default:request.user.first_name }}">                
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="lastname">Last Name</label>
+                                                <input type="text" class="form-control" name="last_name" value="{{ request.session.last_name|default:request.user.last_name}}">                
+                                            </div>
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone</label>
+                                                <input type="tel" class="form-control" name="mobile" value="{{profile.mobile }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="emailaddress">Email Address</label>
+                                                <input type="text" class="form-control" name="email" value="{{ request.session.email|default:request.user.email }}" readonly style="background-color: #f9f9f9; cursor: not-allowed;">                
+                                            </div>
+                                        </div>
+                                </div>
+                            
+
+                            <br>
+                        
+                                <h6 class="mb-4 billing-heading">Address Details:</h6>		
+                                <div class="row align-items-end">              
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="country">Country</label>
+                                                <div class="select-wrap">
+                                                    <div class="icon">
+                                                        <span class="ion-ios-arrow-down"></span>
+                                                    </div>
+                                                    <select name="country" id="country" class="form-control">
+                                                        <option value="India">India</option>
+                                                        <option value="Australia">Australia</option>
+                                                        <option value="Italy">Italy</option>
+                                                        <option value="Philippines">Philippines</option>
+                                                        <option value="South Korea">South Korea</option>
+                                                        <option value="Hongkong">Hongkong</option>
+                                                        <option value="Japan">Japan</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <div class="form-group">
+                                                    <label for="state">State</label>
+                                                    <div class="select-wrap">
+                                                        <div class="icon">
+                                                            <span class="ion-ios-arrow-down"></span>
+                                                        </div>
+
+                                                        <select name="state" id="state" class="form-control">
+                                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                            <option value="Assam">Assam</option>
+                                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="district">District</label>
+                                                <div class="select-wrap">
+                                                    <div class="icon">
+                                                        <span class="ion-ios-arrow-down"></span>
+                                                    </div>
+                                                    <select name="district" id="district" class="form-control">
+                                                        <option value="khargone">Khargone</option>
+                                                        <option value="Italy">Italy</option>
+                                                        <option value="Philippines">Philippines</option>
+                                                        <option value="South Korea">South Korea</option>
+                                                        <option value="Hongkong">Hongkong</option>
+                                                        <option value="Japan">Japan</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="towncity">Town / City</label>
+                                                <input type="text" class="form-control" placeholder="" name="city" value="{{ request.session.city|default:address.city }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="apartment">House / Apartment</label>
+                                                <input type="text" class="form-control" placeholder="House number and building name" name="apartment" value="{{ request.session.apartment|default:address.apartment }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="streetaddress">Street Address</label>
+                                                <input type="text" class="form-control" placeholder="Appartment, suite, unit etc: (optional)" name="street" value="{{ request.session.street|default:address.street }}">
+                                            </div>
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="pincodezip">Pincode / ZIP *</label>
+                                                <input type="text" class="form-control" placeholder="" name="pincode" value="{{ request.session.pincode|default:address.pincode }}">
+                                            </div>
+                                        </div>
+                                        
+                                </div>
+
+
+                                <div class="mt-2 pt-2">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox" value="" class="mr-2"> All above given information is correct</label><br>
+                                            </div>
+                                        </div>                           
+                                </div>
+                                
+                                <p> <button class="btn btn-primary py-2 px-4">Submit Details</button></p> 
+                                {% if msg %}
+                                    <div class="alert alert-success">
+                                        {{ msg }}
+                                    </div>
+                                {% endif %}
+                    </form><!-- END -->
+                </div>
+
+
+                <!-- change password -->
+                <div id="sec-change-password" class="buyer-section d-none">
+                    <div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg'%}');">
+                        <div class="container">
+                            <div class="row block-9 justify-content-center">
+                                <div class="col-md-8 order-md-last d-flex">
+                                    <form action="{% url 'change_password' %}" method="post" class="bg-white p-5 contact-form" enctype="multipart/form-data">
+                                     {% csrf_token %}
+                                        <div class="row no-gutters slider-text align-items-center justify-content-center">
+                                            <div class="col-md-12 ftco-animate text-center">
+                                                <h3 class="mb-0 bread">Change Password</h3><br>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            Old Password:<input type="password" class="form-control" name="old_password" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            New Password:*<input type="password" class="form-control" name="new_password" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            Confirm New Password:*<input type="password" class="form-control" name="confirm_new_password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" value="update password" class="btn btn-primary py-3 px-5">
+                                        </div>
+                                        {% if error %}
+                                            <div class="alert alert-danger" role="alert">
+                                                {{ error }}
+                                            </div>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             
-              <div class="sidebar-box-2">
-                 <div class= "card header" style="text-align:left; color: black; padding: 10px; margin-top: -30px;">
-                      <span><i class="bi bi-person-circle"></i>&nbsp;&nbsp; MY ACCOUNT</span>
-                 </div>
-                 <div class= "card header" style="text-align: left; padding: 10px;">
-                     <span>
-                             <a href="{% url 'update_profile' %}"><i class="bi bi-pencil-square"></i> &nbsp;&nbsp; Update Profile</a>
-                     </span>
-                     <span>
-                             <a href="{% url 'change_password' %}"><i class="bi bi-shield-fill-exclamation"></i> &nbsp;&nbsp; Change Password</a>
-                     </span>
-                 </div>
+            <!-- Bank details -->
+                <div id="sec-bank-details" class="buyer-section d-none">
+                    <form action="#" method="post" class="billing-form">
+                        {% csrf_token %}	
+                                               
+                                <h6 class="mb-4 billing-heading">Bank Details:</h6>		
+                                <div class="row align-items-end">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="bank_name">Bank Name</label>
+                                                <input type="text" class="form-control" name="bank_name">                
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="ifsc_code">IFSC Code</label>
+                                                <input type="text" class="form-control" name="ifsc_code">                
+                                            </div>
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="account_holder">Account Holder</label>
+                                                <input type="text" class="form-control" name="account_holder">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="branch">Branch</label>
+                                                <input type="text" class="form-control" name="branch">                
+                                            </div>
+                                        </div>
+                                        <div class="w-100"></div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="number">Account Number</label>
+                                                <input type="text" inputmode="numeric" class="form-control" name="account_number">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="re-enter account number"> Re-Enter Account Number </label>
+                                                <input type="text" inputmode="numeric" class="form-control" name="confirm_account_number">                
+                                            </div>
+                                        </div>
+                                </div>
 
-                 <div class= "card header" style="text-align: left; color: black; padding: 10px;">
-                      <span> <i class="bi bi-person-vcard"> </i>&nbsp;&nbsp; MY ORDERS </span>
-                 </div>
-                 <div class= "card header" style="text-align: left; padding: 10px;"> 
-                     <span>
-                             <a href="#"><i class="bi bi-box-fill"></i> &nbsp;&nbsp; My Products</a>
-                     </span>
-                     <span>
-                             <a href="#"><i class="bi bi-suit-heart"></i> &nbsp;&nbsp; Wishlist</a>
-                     </span>
-                     <span>
-                             <a href="{% url 'cart' %}"><i class="bi bi-cart3"></i> &nbsp;&nbsp; Cart</a>
-                     </span>
-                     <span>
-                             <a href="{% url 'checkout' %}"><i class="bi bi-bookmark-check-fill"></i> &nbsp;&nbsp; Checkout</a>
-                     </span>
-                 </div>
+                            <br>
+                        
+                                <div class="mt-2 pt-2">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label><input type="checkbox" value="" class="mr-2"> All above given information is correct</label><br>
+                                            </div>
+                                        </div>                           
+                                </div>
+                                
+                                <p> <button class="btn btn-primary py-2 px-4">Submit Details</button></p> 
+                                {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                                {% endif %}
+                    </form><!-- END -->
+                </div>
+ 
 
-                 <div class= "card header" style="text-align: left; color: black; padding: 10px;">
-                      <span> <i class="bi bi-person-vcard"> </i>&nbsp;&nbsp; Payments </span>
-                 </div>
-                 <div class= "card header" style="text-align: left; padding: 10px;"> 
-                     <span>
-                             <a href="#"><i class="bi bi-bank"></i> &nbsp;&nbsp; Bank Details</a>
-                     </span>
-                     <span>
-                             <a href="{% url 'checkout' %}"><i class="bi bi-credit-card-2-front"></i> &nbsp;&nbsp; Other Payments</a>
-                     </span>
-                 </div>
-                  <div class= "card header" style="text-align:left; color: black; padding: 10px; ">
-                      <span><i class="bi bi-box-arrow-right"></i>  &nbsp;&nbsp; Logout</span>
-                 </div>                             
-              </div>
-
-               <div class="sidebar-box-2">
-                 <div class= "card header" style="text-align:left; color: black; padding: 10px; margin-top: -30px;">
-                      <small> Frequently Visited:
-                      <span> Privacy Policy &nbsp;&nbsp; Help Center </span>
-                      </small>
-                 </div>                         
-              </div>
-
-            
-        </div>
-        <div class="col-md-8" id="buyer-main-content" style="margin-left: 20px; margin-top: 20px;">
-            <div class= "row" style="text-align: left; ">
-                <h4> <b><i>  PERSONAL INFORMATION </i></b> </h4>
             </div>
-            <div class= "row" style="text-align: left; padding: 10px;">
-                <span> <b> Name: </b> {{user.first_name}} {{user.last_name}} </span>
-            </div>
-            <div class= "row" style="text-align: left; padding: 10px;">
-                <span> <b> Mobile Number: </b> {{profile.mobile}}  </span>
-            </div>
-            <div class= "row" style="text-align: left; padding: 10px;">
-                <span> <b> Email Id: </b> {{user.email}} </span>
-            </div>
-            <div class= "row" style="text-align: left; padding: 10px;">
-                <span> 
-                    <b> Address: </b> 
-                       {% if address %}
-                            {{address.apartment}}, {{address.street}}, 
-                            {{address.city}}, {{address.district}}, 
-                            {{address.state}}, {{address.country}}, {{address.pincode}}
-                       {% else %}
-                            Address not added yet
-                        {% endif %}
-                </span>
-            </div>
-        </div>
-            
+        </div>     
     </div>
 </section>
-   
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".sidebar-tab-link");
+    const sections = document.querySelectorAll(".buyer-section");
+
+    links.forEach(function (link) {
+        link.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("data-target");
+            if (!targetId) return;
+
+            e.preventDefault();
+
+            // Sab sections ko d-none se chhupayein
+            sections.forEach(function (section) {
+                section.classList.add("d-none");
+            });
+
+            // Sirf target section ka d-none hatayein
+            const activeSection = document.getElementById(targetId);
+            if (activeSection) {
+                activeSection.classList.remove("d-none");
+            }
+
+            // Sab links se active class hatayein aur clicked link par lagayein
+            links.forEach(function (item) {
+                item.classList.remove("active");
+            });
+            this.classList.add("active");
+        });
+    });
+});
+</script>
 
     {% endblock %}
 </html>

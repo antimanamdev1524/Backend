@@ -43,7 +43,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('update_profile/', views.update_profile, name='update_profile'),
     path('buyer_profile/', views.buyer_profile, name='buyer_profile'),
-    
+    path('bank_account/', views.bank_account, name='bank_account'),
 
     
 ]

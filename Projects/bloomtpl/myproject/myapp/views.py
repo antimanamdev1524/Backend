@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 import random
 from django.core.mail import send_mail
 
@@ -11,6 +12,7 @@ from .models import Address, Product
 from .models import Category
 from .models import BuyerProfile
 from .models import SellerProfile
+from .models import BankDetails
 
 # Create your views here.
 def index(request):
@@ -254,7 +256,7 @@ def buyer_profile(request):
         address = Address.objects.get(user=current_user)
         return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'address': address})
     except BuyerProfile.DoesNotExist:
-        return redirect('home')
+        return redirect('home') 
 
 def seller_profile(request):
     current_user = request.user
@@ -263,7 +265,8 @@ def seller_profile(request):
         return render(request, 'profile.html', {'profile': seller_profile})
     except SellerProfile.DoesNotExist:
         return redirect('home')
-    
+
+@login_required
 def update_profile(request):
     if request.method == 'POST':
         current_user = request.user
@@ -318,6 +321,41 @@ def update_profile(request):
             return redirect ('index')
     return render(request, 'update_profile.html', {'profile': BuyerProfile.objects.get(user=request.user), 'address': Address.objects.get(user=request.user)})
 
-
-
-
+@login_required
+def bank_account(request):
+    current_user = request.user
+    buyer_profile = BuyerProfile.objects.get(user=current_user)
+    if request.method == "POST":
+        if BuyerProfile.objects.filter(user=current_user):
+            bank_name = request.POST.get('bank_name')
+            branch = request.POST.get('branch')
+            account_holder = request.POST.get('account_holder')
+            ifsc_code = request.POST.get('ifsc_code')
+            account_number = request.POST.get('account_number')
+            reenter_account_number = request.POST.get('confirm_account_number')
+            
+            if account_number != reenter_account_number:
+                return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'msg': 'Account number and re-entered account number do not match!'})
+            
+            try:
+                bank_details = BankDetails.objects.get(user=current_user)
+                bank_details.bank_name = bank_name
+                bank_details.branch = branch
+                bank_details.account_holder = account_holder
+                bank_details.account_number = account_number
+                bank_details.ifsc_code = ifsc_code
+                bank_details.save()
+            except BankDetails.DoesNotExist:
+                bank_details = BankDetails.objects.create(
+                    user=current_user,
+                    bank_name=bank_name,
+                    branch=branch,
+                    account_holder=account_holder,
+                    ifsc_code=ifsc_code,
+                    account_number=account_number,
+                )     
+            return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'msg': 'Bank details updated successfully!'})
+           
+        else:
+            return redirect('buyer_profile')
+    return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'msg': 'Please fill in your bank details.'})
