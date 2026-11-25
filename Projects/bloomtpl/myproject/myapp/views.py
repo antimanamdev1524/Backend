@@ -53,9 +53,6 @@ def blog(request):
 def cart(request):
     return render(request, 'cart.html')
 
-def checkout(request):
-    return render(request, 'checkout.html')
-
 def contact(request):
     return render(request, 'contact.html')
 
@@ -255,6 +252,10 @@ def buyer_profile(request):
         buyer_profile = BuyerProfile.objects.get(user=current_user)
     except BuyerProfile.DoesNotExist:
         return redirect('home') 
+    address = Address.objects.filter(user=current_user).first()
+    bank_details = BankDetails.objects.filter(user=current_user).first()
+    return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'address': address, 'bank_details': bank_details})
+       
 
 def seller_profile(request):
     current_user = request.user
@@ -323,8 +324,9 @@ def update_profile(request):
 def bank_account(request):
     current_user = request.user
     buyer_profile = BuyerProfile.objects.get(user=current_user)
+    address = Address.objects.filter(user=current_user).first()
+
     if request.method == "POST":
-        if BuyerProfile.objects.filter(user=current_user):
             bank_name = request.POST.get('bank_name')
             branch = request.POST.get('branch')
             account_holder = request.POST.get('account_holder')
@@ -333,27 +335,27 @@ def bank_account(request):
             reenter_account_number = request.POST.get('confirm_account_number')
             
             if account_number != reenter_account_number:
-                return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'msg': 'Account number and re-entered account number do not match!'})
-            
-            try:
-                bank_details = BankDetails.objects.get(user=current_user)
-                bank_details.bank_name = bank_name
-                bank_details.branch = branch
-                bank_details.account_holder = account_holder
-                bank_details.account_number = account_number
-                bank_details.ifsc_code = ifsc_code
-                bank_details.save()
-            except BankDetails.DoesNotExist:
-                bank_details = BankDetails.objects.create(
-                    user=current_user,
-                    bank_name=bank_name,
-                    branch=branch,
-                    account_holder=account_holder,
-                    ifsc_code=ifsc_code,
-                    account_number=account_number,
-                )     
-            return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'msg': 'Bank details updated successfully!'})
-           
-        else:
-            return redirect('buyer_profile')
-    return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'msg': 'Please fill in your bank details.'})
+                return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'active-tab': 'sec-bank-details', 'address': address, 'msg': 'Account number and re-entered account number do not match!'})
+            else:
+                try:
+                    bank_details = BankDetails.objects.get(user=current_user)
+                    bank_details.bank_name = bank_name
+                    bank_details.branch = branch
+                    bank_details.account_holder = account_holder
+                    bank_details.account_number = account_number
+                    bank_details.ifsc_code = ifsc_code
+                    bank_details.save()
+                except BankDetails.DoesNotExist:
+                    bank_details = BankDetails.objects.create(
+                        user=current_user,
+                        bank_name=bank_name,
+                        branch=branch,
+                        account_holder=account_holder,
+                        ifsc_code=ifsc_code,
+                        account_number=account_number,
+                    )     
+                return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'address': address, 'bank_details' : bank_details, 'active-tab': 'sec-bank-details', 'msg': 'Bank details updated successfully!', 'msg_type': 'success'})
+    return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'address': address, 'active-tab': 'sec-bank-details', 'msg': 'Please fill in your bank details.', 'msg_type': 'info'})
+
+def checkout(request):
+    return render(request, 'checkout.html')

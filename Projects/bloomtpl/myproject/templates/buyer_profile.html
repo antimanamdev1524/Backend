@@ -63,7 +63,7 @@
                                     <a href="#"class="sidebar-tab-link" data-target="sec-bank-details"><i class="bi bi-bank"></i> &nbsp;&nbsp; Bank Details</a>
                             </span>
                             <span>
-                                    <a href="{% url 'checkout' %}"><i class="bi bi-credit-card-2-front"></i> &nbsp;&nbsp; Other Payments</a>
+                                    <a href="#"><i class="bi bi-credit-card-2-front"></i> &nbsp;&nbsp; Other Payments</a>
                             </span>
                         </div>
                         <div class= "card header" style="text-align:left; color: black; padding: 10px; ">
@@ -342,47 +342,51 @@
             
             <!-- Bank details -->
                 <div id="sec-bank-details" class="buyer-section d-none">
-                    <form action="#" method="post" class="billing-form">
+                    <form action="{% url 'bank_account' %}" method="POST" class="billing-form">
                         {% csrf_token %}	
-                                               
+                            {% if msg %}
+                                <div class="alert {% if msg_type == 'error' %}alert-danger{% elif msg_type == 'success' %}alert-success{% else %}alert-info{% endif %}">
+                                    {{ msg }}
+                                </div>
+                            {% endif %}            
                                 <h6 class="mb-4 billing-heading">Bank Details:</h6>		
                                 <div class="row align-items-end">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="bank_name">Bank Name</label>
-                                                <input type="text" class="form-control" name="bank_name">                
+                                                <input type="text" class="form-control" name="bank_name" value="{{ bank_details.bank_name|default:'' }}">                
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="ifsc_code">IFSC Code</label>
-                                                <input type="text" class="form-control" name="ifsc_code">                
+                                                <input type="text" class="form-control" name="ifsc_code" value="{{ bank_details.ifsc_code|default:'' }}">                
                                             </div>
                                         </div>
                                         <div class="w-100"></div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="account_holder">Account Holder</label>
-                                                <input type="text" class="form-control" name="account_holder">
+                                                <input type="text" class="form-control" name="account_holder" value="{{ bank_details.account_holder|default:'' }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="branch">Branch</label>
-                                                <input type="text" class="form-control" name="branch">                
+                                                <input type="text" class="form-control" name="branch" value="{{ bank_details.branch|default:'' }}">                
                                             </div>
                                         </div>
                                         <div class="w-100"></div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="number">Account Number</label>
-                                                <input type="text" inputmode="numeric" class="form-control" name="account_number">
+                                                <input type="text" inputmode="numeric" class="form-control" name="account_number" value="{{ bank_details.account_number|default:'' }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="re-enter account number"> Re-Enter Account Number </label>
-                                                <input type="text" inputmode="numeric" class="form-control" name="confirm_account_number">                
+                                                <input type="text" inputmode="numeric" class="form-control" name="confirm_account_number" value="{{ bank_details.confirm_account_number|default:'' }}">              
                                             </div>
                                         </div>
                                 </div>
@@ -398,11 +402,7 @@
                                 </div>
                                 
                                 <p> <button class="btn btn-primary py-2 px-4">Submit Details</button></p> 
-                                {% if error %}
-                                <div class="alert alert-danger">
-                                    {{ error }}
-                                </div>
-                                {% endif %}
+                                
                     </form><!-- END -->
                 </div>
  
