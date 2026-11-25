@@ -253,8 +253,6 @@ def buyer_profile(request):
     current_user = request.user
     try:
         buyer_profile = BuyerProfile.objects.get(user=current_user)
-        address = Address.objects.get(user=current_user)
-        return render(request, 'buyer_profile.html', {'profile': buyer_profile, 'address': address})
     except BuyerProfile.DoesNotExist:
         return redirect('home') 
 
